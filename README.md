@@ -18,6 +18,7 @@ The project is a website where you cat rent a car. In order to do this, you shou
 5) Write comment about service.
 #### 2.2. Guest capabilities <a name="2.2"></a>
 1) View cars. 
+2) View comments.
 #### 2.3. Admin capabilities <a name="2.3"></a>
 1) View cars.
 2) Change information about cars.
