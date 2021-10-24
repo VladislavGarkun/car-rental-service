@@ -15,7 +15,8 @@ The project is a website where you cat rent a car. In order to do this, you shou
 2) Change information in personal accout.
 3) Rent a car.
 4) Cancel the rent.
-5) Write comment about service.
+5) View comments.
+6) Write comment about service.
 #### 2.2. Guest capabilities <a name="2.2"></a>
 1) View cars. 
 2) View comments.
