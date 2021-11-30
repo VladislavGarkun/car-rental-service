@@ -2,9 +2,12 @@ package com.ibagroup.carrental.controller.user;
 
 import com.ibagroup.carrental.dto.OperationMessageDto;
 import com.ibagroup.carrental.dto.authorization.AuthorizationDto;
-import com.ibagroup.carrental.dto.car.CarDto;
+import com.ibagroup.carrental.dto.regitration.RegistrationDto;
 import com.ibagroup.carrental.dto.user.UserDto;
-import org.springframework.http.HttpHeaders;
+import com.ibagroup.carrental.model.user.User;
+import com.ibagroup.carrental.service.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,64 +22,91 @@ public class UserController {
 
     HashMap<String, UserDto> users = new HashMap<>();
 
-    @PostMapping(value = "user", consumes = "application/json", produces = "application/json")
+    private final UserService service;
+
+    @Autowired
+    public UserController(UserService service){
+        this.service = service;
+    }
+
+    @PostMapping(value = "user", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity addUser(@RequestBody UserDto user) {
-        saveUser(user);
+        User entity = service.addUser(user);
 
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(entity);
     }
 
-    @PostMapping(value = "users", consumes = "application/json", produces = "application/json")
-    public ResponseEntity addUsers(@RequestBody List<UserDto> users){
-        users.forEach(this::saveUser);
+    @GetMapping(value = "user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getUserById(@PathVariable("userId") Long userId){
+        User entity = service.getUserById(userId);
 
-        return ResponseEntity.ok(new OperationMessageDto("Successful operation"));
+        return ResponseEntity.ok(entity);
     }
 
-    @PostMapping(value = "user/login", consumes = "application/json", produces = "application/json")
-    public ResponseEntity login(@RequestBody AuthorizationDto authorization){
-        Boolean isUsernameValidAndPasswordMatches = Optional.ofNullable(users.get(authorization.getUserName()))
-                .map(user -> user.getPassword().equals(authorization.getPassword())).orElse(false);
+    @GetMapping(value = "/user/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<User> getAllUsers(){
+        List<User> users = service.getAllUsers();
 
-        HttpHeaders header = new HttpHeaders();
-        header.add("X-Rate-Limit", "1800");
-        header.add("X-Expires-After", LocalDateTime.now().plusHours(1).toString());
-
-        return isUsernameValidAndPasswordMatches
-                ? ResponseEntity.ok().headers(header).body(new OperationMessageDto("Succesful operation"))
-                : ResponseEntity.badRequest().body(new OperationMessageDto("Invalid username/password supplied"));
+        return users;
     }
 
-    @GetMapping(value = "user/logout", produces = "application/json")
-    public ResponseEntity logout(@RequestParam String userName){
-        return ResponseEntity.ok(new OperationMessageDto("Successful operation"));
+    @PutMapping(value = "user", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity updateUser(@RequestBody User user){
+        User entity = service.updateUser(user);
+
+        return ResponseEntity.ok(entity);
     }
 
-    @GetMapping(value = "user/{username}", produces = "application/json")
-    public ResponseEntity getUserByName(@PathVariable String username){
-        Optional<UserDto> foundUser = Optional.ofNullable(users.get(username));
-
-        return foundUser.isPresent() ? ResponseEntity.ok(foundUser.get())
-                : ResponseEntity.noContent().build();
-    }
-
-    @PutMapping(value = "user/{username}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity userUpdate(@PathVariable String username, @RequestBody UserDto user){
-        users.put(username, user);
-
-        return ResponseEntity.ok(new OperationMessageDto("Successful operation"));
-    }
-
-    @DeleteMapping(value = "user/{username}", produces = "application/json")
-    public ResponseEntity deleteUser(@PathVariable String username){
-        UserDto user = users.remove(username);
-
-        return ResponseEntity.ok(user);
+    @DeleteMapping(value = "user/{userId}")
+    public void deleteUserById(@PathVariable Long userId){
+        service.deleteUserById(userId);
     }
 
     private void saveUser(@RequestBody UserDto user) {
         long latestId = users.size();
         user.setId(latestId);
         users.put(user.getUserName(), user);
+    }
+
+
+
+
+    @PostMapping(value = "users", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity addUsers(@RequestBody List<UserDto> users){
+        users.forEach(this::saveUser);
+
+        return ResponseEntity.ok(new OperationMessageDto("Successful operation"));
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true", allowedHeaders = "*")
+    @PostMapping(value = "user/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity login(@RequestBody AuthorizationDto authorization){
+//        Boolean isUsernameValidAndPasswordMatches = Optional.ofNullable(users.get(authorization.getUserName()))
+//                .map(user -> user.getPassword().equals(authorization.getPassword())).orElse(false);
+//
+//        HttpHeaders header = new HttpHeaders();
+//        header.add("X-Rate-Limit", "1800");
+//        header.add("X-Expires-After", LocalDateTime.now().plusHours(1).toString());
+//
+//        return isUsernameValidAndPasswordMatches
+//                ? ResponseEntity.ok().headers(header).body(new OperationMessageDto("Succesful operation"))
+//                : ResponseEntity.badRequest().body(new OperationMessageDto("Invalid username/password supplied"));
+
+        ResponseEntity entity = service.signIn(authorization);
+
+        return entity;
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true", allowedHeaders = "*")
+    @PostMapping(value = "user/registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity registration(@RequestBody RegistrationDto registration){
+        ResponseEntity entity = service.SignUp(registration);
+
+        return entity;
+    }
+
+    @GetMapping(value = "user/logout", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity logout(@RequestParam String userName){
+        return ResponseEntity.ok(new OperationMessageDto("Successful operation"));
     }
 }

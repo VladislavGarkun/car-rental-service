@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class OperationMessageDto {
-    private final String text;
+    private final String mess;
 }

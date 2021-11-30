@@ -1,11 +1,15 @@
 package com.ibagroup.carrental.controller.car;
 
 import com.ibagroup.carrental.dto.car.CarDto;
+import com.ibagroup.carrental.model.car.Car;
+import com.ibagroup.carrental.service.car.CarService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -14,34 +18,45 @@ public class CarController {
 
     private Map<Long, CarDto> cars = new HashMap<>();
 
-    @PostMapping(consumes = "application/json", produces = "application/json")
+    private final CarService service;
+
+    @Autowired
+    public CarController(CarService service){
+        this.service = service;
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity addCar(@RequestBody CarDto car) {
-        long latestId = cars.size();
-        car.setId(latestId);
-        cars.put(latestId, car);
+        Car entity = service.addCar(car);
+
+        return ResponseEntity.ok(entity);
+    }
+
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Car> getAllCars(){
+        List<Car> cars = service.getAllCars();
+
+        return cars;
+    }
+
+    @GetMapping(value = "/{carId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getCarById(@PathVariable("carId") Long carId){
+        Car car = service.getCarById(carId);
 
         return ResponseEntity.ok(car);
     }
 
-    @GetMapping(value = "{carId}", produces = "application/json")
-    public ResponseEntity getCarById(@PathVariable Long carId){
-        CarDto car = cars.get(carId);
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity updateCar(@RequestBody Car car){
+        Car entity = service.updateCar(car);
 
-        return ResponseEntity.ok(car);
+        return ResponseEntity.ok(entity);
     }
 
-    @PutMapping(consumes = "application/json")
-    public ResponseEntity updateCar(@RequestBody CarDto car){
-        cars.put(car.getId(), car);
+    @DeleteMapping(value = "/{carId}")
+    public void deleteCarById(@PathVariable Long carId){
 
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping(value = "{carId}", produces = "application/json")
-    public ResponseEntity deleteCar(@PathVariable Long carId){
-        CarDto car = cars.remove(carId);
-
-        return ResponseEntity.ok(car);
+        service.deleteCarById(carId);
     }
 
 }
