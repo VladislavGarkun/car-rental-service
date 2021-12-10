@@ -25,6 +25,7 @@ public class CarController {
         this.service = service;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity addCar(@RequestBody CarDto car) {
         Car entity = service.addCar(car);
@@ -32,13 +33,15 @@ public class CarController {
         return ResponseEntity.ok(entity);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Car> getAllCars(){
+    public ResponseEntity<List<Car>> getAllCars(){
         List<Car> cars = service.getAllCars();
 
-        return cars;
+        return ResponseEntity.ok(cars);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(value = "/{carId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getCarById(@PathVariable("carId") Long carId){
         Car car = service.getCarById(carId);
@@ -46,6 +49,7 @@ public class CarController {
         return ResponseEntity.ok(car);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateCar(@RequestBody Car car){
         Car entity = service.updateCar(car);

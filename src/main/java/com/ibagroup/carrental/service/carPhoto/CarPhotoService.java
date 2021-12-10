@@ -7,6 +7,8 @@ import com.ibagroup.carrental.repo.car.CarRepo;
 import com.ibagroup.carrental.repo.carPhoto.CarPhotoRepo;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -45,5 +47,16 @@ public class CarPhotoService {
 
     public void deleteCarPhotoById(Long carPhotoId) {
         repo.deleteById(carPhotoId);
+    }
+
+    public List<CarPhoto> getCarPhotosByCarId(Long carId) {
+        return repo.findByCarId(carId);
+
+//        List<String> photos = new ArrayList<>();
+//        for(int i = 0; i < carPhotos.size(); i++){
+//            photos.add(carPhotos.get(i).getPhotoUrl());
+//        }
+//
+//        return photos;
     }
 }

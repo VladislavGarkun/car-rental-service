@@ -27,11 +27,19 @@ public class CarPhotoController {
         return ResponseEntity.ok(entity);
     }
 
-    @GetMapping(value = "/{carPhotoId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getCarPhotoById(@PathVariable("carPhotoId") Long carPhotoId){
-        CarPhoto carPhoto = service.getCarPhotoById(carPhotoId);
+//    @GetMapping(value = "/{carPhotoId}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity getCarPhotoById(@PathVariable("carPhotoId") Long carPhotoId){
+//        CarPhoto carPhoto = service.getCarPhotoById(carPhotoId);
+//
+//        return ResponseEntity.ok(carPhoto);
+//    }
 
-        return ResponseEntity.ok(carPhoto);
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping(value = "/{carId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<CarPhoto>> getCarPhotosByCarId(@PathVariable("carId") Long carId){
+        List<CarPhoto> carPhotos = service.getCarPhotosByCarId(carId);
+
+        return ResponseEntity.ok(carPhotos);
     }
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)

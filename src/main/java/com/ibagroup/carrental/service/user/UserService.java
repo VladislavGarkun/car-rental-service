@@ -5,10 +5,10 @@ import com.ibagroup.carrental.dto.authorization.AuthorizationDto;
 import com.ibagroup.carrental.dto.regitration.RegistrationDto;
 import com.ibagroup.carrental.dto.user.UserDto;
 import com.ibagroup.carrental.model.user.User;
-import com.ibagroup.carrental.model.userRole.UserRole;
 import com.ibagroup.carrental.model.userRole.UserRoleEnum;
 import com.ibagroup.carrental.repo.user.UserRepo;
 import com.ibagroup.carrental.repo.userRole.UserRoleRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +22,7 @@ public class UserService {
 
     private final UserRoleRepo userRoleRepo;
 
+    @Autowired
     public UserService(UserRepo repo, UserRoleRepo userRoleRepo){
         this.repo = repo;
         this.userRoleRepo = userRoleRepo;
@@ -44,6 +45,10 @@ public class UserService {
 
     public User getUserById(Long id) {
         return repo.findById(id).get();
+    }
+
+    public User getUserByUserName(String userName) {
+        return repo.findByUserName(userName);
     }
 
     public List<User> getAllUsers() {
@@ -74,6 +79,26 @@ public class UserService {
     }
 
     public ResponseEntity SignUp(RegistrationDto registration) {
+        if(registration.getFirstName().equals("") ||
+                registration.getLastName().equals("") ||
+                registration.getUserName().equals("") ||
+                registration.getEmail().equals("") ||
+                registration.getPassword().equals("") ||
+                registration.getPasswordRepeat().equals("") ||
+                registration.getPhone().equals("")
+        ){
+            return ResponseEntity.badRequest().body(new OperationMessageDto("You are didn't fill in all required fields"));
+        }
+        if(repo.findByUserName(registration.getUserName()) != null){
+            return ResponseEntity.badRequest().body(new OperationMessageDto("This username is already taken"));
+        }
+        if(repo.findByEmail(registration.getEmail()) != null){
+            return ResponseEntity.badRequest().body(new OperationMessageDto("This email is already taken"));
+        }
+        if(!registration.getPassword().equals(registration.getPasswordRepeat())){
+            return ResponseEntity.badRequest().body(new OperationMessageDto("Entered passwords are don't match"));
+        }
+
         User entity = new User();
 
         entity.setUserRole(userRoleRepo.findUserRoleByRole(UserRoleEnum.USER.toString()));

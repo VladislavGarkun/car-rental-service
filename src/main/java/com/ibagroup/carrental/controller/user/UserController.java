@@ -36,9 +36,17 @@ public class UserController {
         return ResponseEntity.ok(entity);
     }
 
-    @GetMapping(value = "user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getUserById(@PathVariable("userId") Long userId){
-        User entity = service.getUserById(userId);
+//    @GetMapping(value = "user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity getUserById(@PathVariable("userId") Long userId){
+//        User entity = service.getUserById(userId);
+//
+//        return ResponseEntity.ok(entity);
+//    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping(value = "user/{userName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getUserByUserName(@PathVariable("userName") String userName){
+        User entity = service.getUserByUserName(userName);
 
         return ResponseEntity.ok(entity);
     }
@@ -50,6 +58,7 @@ public class UserController {
         return users;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PutMapping(value = "user", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateUser(@RequestBody User user){
         User entity = service.updateUser(user);
@@ -78,26 +87,15 @@ public class UserController {
         return ResponseEntity.ok(new OperationMessageDto("Successful operation"));
     }
 
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true", allowedHeaders = "*")
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping(value = "user/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity login(@RequestBody AuthorizationDto authorization){
-//        Boolean isUsernameValidAndPasswordMatches = Optional.ofNullable(users.get(authorization.getUserName()))
-//                .map(user -> user.getPassword().equals(authorization.getPassword())).orElse(false);
-//
-//        HttpHeaders header = new HttpHeaders();
-//        header.add("X-Rate-Limit", "1800");
-//        header.add("X-Expires-After", LocalDateTime.now().plusHours(1).toString());
-//
-//        return isUsernameValidAndPasswordMatches
-//                ? ResponseEntity.ok().headers(header).body(new OperationMessageDto("Succesful operation"))
-//                : ResponseEntity.badRequest().body(new OperationMessageDto("Invalid username/password supplied"));
-
         ResponseEntity entity = service.signIn(authorization);
 
         return entity;
     }
 
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true", allowedHeaders = "*")
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping(value = "user/registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity registration(@RequestBody RegistrationDto registration){
         ResponseEntity entity = service.SignUp(registration);

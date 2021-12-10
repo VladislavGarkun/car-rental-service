@@ -9,6 +9,7 @@ public class CarDto {
 
     private Long id;
     private String brand;
+    private String model;
     private String body;
     private Integer yearOfIssue;
     private Integer numberOfSeats;

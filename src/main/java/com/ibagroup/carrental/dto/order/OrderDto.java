@@ -1,20 +1,17 @@
 package com.ibagroup.carrental.dto.order;
 
-import com.ibagroup.carrental.model.order.OrderStatusEnum;
+import com.ibagroup.carrental.model.order.OrderStatus;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 public class OrderDto {
 
     private Long id;
     private Long carId;
-    private Long userId;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
-    private Float price;
-    private OrderStatusEnum status;
-    private boolean complete;
+    private String userName;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
 }

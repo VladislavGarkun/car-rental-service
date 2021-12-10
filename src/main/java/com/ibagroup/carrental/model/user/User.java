@@ -1,7 +1,6 @@
 package com.ibagroup.carrental.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.ibagroup.carrental.model.blackList.BlackList;
 import com.ibagroup.carrental.model.userRole.UserRole;
 import lombok.Data;
 

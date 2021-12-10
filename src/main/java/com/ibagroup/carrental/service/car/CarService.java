@@ -26,8 +26,10 @@ public class CarService {
 
     public Car addCar(CarDto car) {
         Car entity = new Car();
-        entity.setBody(car.getBody());
+
         entity.setBrand(car.getBrand());
+        entity.setModel(car.getModel());
+        entity.setBody(car.getBody());
         entity.setYearOfIssue(car.getYearOfIssue());
         entity.setNumberOfSeats(car.getNumberOfSeats());
         entity.setTransmission(car.getTransmission());
@@ -49,7 +51,7 @@ public class CarService {
     }
 
     public Car updateCar(Car car) {
-        return repo.saveAndFlush(car);
+        return repo.save(car);
     }
 
     public void deleteCarById(Long carId) {
