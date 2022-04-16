@@ -1,60 +1,22 @@
 package com.ibagroup.carrental.service.car;
 
-import com.ibagroup.carrental.dto.car.CarDto;
-import com.ibagroup.carrental.model.car.Car;
-import com.ibagroup.carrental.repo.car.CarRepo;
-import com.ibagroup.carrental.repo.carPhoto.CarPhotoRepo;
-import com.ibagroup.carrental.service.carPhoto.CarPhotoService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.ibagroup.carrental.dao.model.car.Car;
+import com.ibagroup.carrental.service.dto.car.CarDto;
+import com.ibagroup.carrental.service.dto.car.CarRegistrationDto;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-@Service
-public class CarService {
+public interface CarService {
 
-    private final CarRepo repo;
+    List<CarDto> findAllCars();
 
-    private final CarPhotoRepo carPhotoRepo;
+    CarDto findCarById(Long id);
 
-    @Autowired
-    public CarService(CarRepo repo, CarPhotoRepo carPhotoRepo){
-        this.repo = repo;
-        this.carPhotoRepo = carPhotoRepo;
-    }
+    ResponseEntity addCar(CarRegistrationDto carRegistrationDto);
 
+    Car updateCar(CarDto carDto);
 
-    public Car addCar(CarDto car) {
-        Car entity = new Car();
+    void deleteCarById(Long carId);
 
-        entity.setBrand(car.getBrand());
-        entity.setModel(car.getModel());
-        entity.setBody(car.getBody());
-        entity.setYearOfIssue(car.getYearOfIssue());
-        entity.setNumberOfSeats(car.getNumberOfSeats());
-        entity.setTransmission(car.getTransmission());
-        entity.setPrice(car.getPrice());
-        entity.setStatus(car.getStatus());
-
-        repo.save(entity);
-
-        return entity;
-    }
-
-    public List<Car> getAllCars() {
-        return repo.findAll();
-    }
-
-
-    public Car getCarById(Long id) {
-        return repo.findById(id).get();
-    }
-
-    public Car updateCar(Car car) {
-        return repo.save(car);
-    }
-
-    public void deleteCarById(Long carId) {
-        repo.deleteById(carId);
-    }
 }
