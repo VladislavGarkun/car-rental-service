@@ -8,11 +8,13 @@
         <version>2.5.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.ibagroup.carrental</groupId>
+    <groupId>com.bsuir.carrental</groupId>
     <artifactId>CarRentalService</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>PetStoreService</name>
-    <description>Example project for Java &amp; React development sources</description>
+    <packaging>war</packaging>
+
+    <!--    <name>PetStoreService</name>-->
+<!--    <description>Example project for Java &amp; React development sources</description>-->
     <properties>
         <java.version>8</java.version>
         <org.mapstruct.version>1.5.0.Beta2</org.mapstruct.version>
